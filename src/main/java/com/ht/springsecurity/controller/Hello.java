@@ -15,8 +15,9 @@ public class Hello {
 
     @GetMapping
     public String get(Principal principal){
+        System.out.println("hello get called");
         OAuth2User principal1 = ((OAuth2AuthenticationToken) principal).getPrincipal();
-        Object login = principal1.getAttribute("login");
+        Object login = principal1.getAttribute("name");
         return "hi "+ login +" authorities:"+principal1.getAuthorities().stream().collect(Collectors.toList());
     }
 }

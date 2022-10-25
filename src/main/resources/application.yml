@@ -3,7 +3,6 @@ spring:
     oauth2:
       client:
         registration:
-          github:
-            client-id: <from github developer settings>
-            client-secret: <from github developer settings>
-
+          google:
+            client-id: https://console.cloud.google.com/apis/credentials?project=learnoauth2-329111
+            client-secret: https://console.cloud.google.com/apis/credentials?project=learnoauth2-329111
