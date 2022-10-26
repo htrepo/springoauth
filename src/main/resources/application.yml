@@ -1,8 +1,21 @@
 spring:
+  application:
+    name: webclient1
   security:
     oauth2:
       client:
         registration:
           google:
-            client-id: https://console.cloud.google.com/apis/credentials?project=learnoauth2-329111
-            client-secret: https://console.cloud.google.com/apis/credentials?project=learnoauth2-329111
+            client-id: 503308488988-tkd7v5hac2g251j41p5uhjrr2udfhrj6.apps.googleusercontent.com
+            client-secret: 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
+      resourceserver:
+        jwt:
+          jwk-set-uri:
+
+logging:
+  level:
+    root: INFO
+    com.memorynotfound: INFO
+    org.springframework.web: INFO
+    org.springframework.security: INFO
+

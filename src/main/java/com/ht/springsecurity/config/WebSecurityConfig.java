@@ -1,37 +1,48 @@
 package com.ht.springsecurity.config;
 
+import com.nimbusds.jwt.proc.DefaultJWTProcessor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+@Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final AuthenticationSuccessHandler succHandler;
-
-    public WebSecurityConfig(@Qualifier("oauth2authSuccessHandler") AuthenticationSuccessHandler succHandler) {
-        this.succHandler = succHandler;
-    }
+    @Autowired
+    @Qualifier("oauth2authSuccessHandler")
+    private AuthenticationSuccessHandler succHandler;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
-        /*http.authorizeRequests()
-                .antMatchers("/").authenticated()
+        http.cors()
+                .and().authorizeRequests()
+                .anyRequest().authenticated()
                 .and()
-                .oauth2Login();*/
-
-/*        AuthorizationRequestRepository<OAuth2AuthorizationRequest> authRepo=null;// need to implement if you need custom auth repo
-
-        http.authorizeRequests()
-                .antMatchers("/").authenticated()
+                .oauth2Login().successHandler(succHandler)
                 .and()
-                .oauth2Login().authorizationEndpoint().authorizationRequestRepository(authRepo);
-                */
-        http.authorizeRequests()
-                .antMatchers("/").authenticated()
+                .oauth2Client()
                 .and()
-                .oauth2Login().successHandler(succHandler); // succHandler did not work
+                .oauth2ResourceServer().jwt()
+                ;
 
+
+
+    }
+
+    @Bean
+    public JwtDecoder jwtDecoder(){
+        return new NimbusJwtDecoder(new DefaultJWTProcessor<>());
+    }
+
+    @Override
+    public void configure(WebSecurity webSecurity){
+        webSecurity.ignoring().antMatchers("/css/**","/webjars/**");
     }
 }
